@@ -1,6 +1,7 @@
 # INFRANEX AI (ಜನಸ್ಪಂದನ)
 ### Intelligent Civic Infrastructure Monitoring & Incident Lifecycle Management Platform
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-infranexai.netlify.app-00C7B7?style=flat&logo=netlify&logoColor=white)](https://infranexai.netlify.app/)
 [![Frontend Build](https://img.shields.io/badge/Frontend-Vite%20%7C%20React%2018%20%7C%20TypeScript-blue)](https://vitejs.dev/)
 [![Backend Tests](https://img.shields.io/badge/Backend-FastAPI%20%7C%20Pytest%20(19%2F19%20Passed)-emerald)](https://fastapi.tiangolo.com/)
 [![Flutter Client](https://img.shields.io/badge/Mobile-Flutter%203.47%20%7C%20Dart%203.13-cyan)](https://flutter.dev/)
@@ -10,6 +11,10 @@
 ---
 
 ## 1. Project Overview
+
+> [!TIP]
+> **🌐 Live Production Demonstration**: The web platform is live and deployed at **[https://infranexai.netlify.app/](https://infranexai.netlify.app/)**.
+> You can test citizen incident reporting, the AI selfie/blur rejection gate, interactive 2.5D smart-city canvas, 8-stage case lifecycle tracker, contractor repair verification, and instant Demo Mode role switching directly in your browser.
 
 **INFRANEX AI** (ಜನಸ್ಪಂದನ — *Jana Spandana*, Citizen Responsiveness) is an accountable civic infrastructure intelligence and lifecycle management platform focused on real-world urban challenges in Bengaluru. 
 
