@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://infranex:infranex_secure_pass@db:5432/infranex_db
+      - SECRET_KEY=infranex_jwt_secret_dev_key
+      - BACKEND_CORS_ORIGINS=["http://localhost:3000","http://localhost:5173"]
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: infranex
+      POSTGRES_PASSWORD: infranex_secure_pass
+      POSTGRES_DB: infranex_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -1,0 +1,169 @@
+# INFRANEX AI — Comprehensive Multi-Project .gitignore
+# Covers Flutter Client, FastAPI Backend, React/Vite Frontend, and Local Runtime State
+
+# ==============================================================================
+# Security & Environment Secrets
+# ==============================================================================
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.cert
+*.crt
+*.pfx
+*.p12
+*.keystore
+*.jks
+!*.env.example
+
+# ==============================================================================
+# Local Databases & Persistent SQLite Stores
+# ==============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+infranex.db
+infranex_test.db
+
+# ==============================================================================
+# Python & Backend (FastAPI / Pytest)
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+# Python build artifacts (top-level lib/ removed so Flutter lib/ is preserved)
+*.so
+.Python
+develop-eggs/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Pytest & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+htmlcov/
+
+# ==============================================================================
+# Frontend & Node.js (React / Vite / TypeScript)
+# ==============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Frontend Build Output
+website/dist/
+website/dist-ssr/
+dist/
+
+# Netlify CLI State
+.netlify/
+website/.netlify/
+
+# Local Environment Overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ==============================================================================
+# Flutter & Dart
+# ==============================================================================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Android build outputs & local config
+/android/app/debug
+/android/app/profile
+/android/app/release
+android/.gradle
+android/captures/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+**/android/**/generated/
+
+# iOS / macOS / Windows / Linux ephemeral Flutter assets
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/ephemeral/
+**/macos/Flutter/ephemeral/
+**/windows/flutter/ephemeral/
+**/linux/flutter/ephemeral/
+ios/Pods/
+ios/.symlinks/
+*.xcworkspace
+*.moved-aside
+DerivedData/
+
+# Obfuscation & Symbolication
+app.*.symbols
+app.*.map.json
+.widget_preview/
+
+# ==============================================================================
+# IDEs, Editors & System Files
+# ==============================================================================
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.metadata
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# Logs & Temporary Files
+.gh_bin/
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
