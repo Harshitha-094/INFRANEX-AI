@@ -22,6 +22,7 @@ from app.services.audit_service import log_audit_event
 from app.services.threshold_service import evaluate_threshold
 from app.services.recurrence_service import calculate_recurrence_score
 from app.routers.auth import require_role
+from app.core.sanitizer import sanitize_text
 
 router = APIRouter(prefix="/dumping-events", tags=["Unauthorized Dumping & Behaviour Intelligence"])
 
@@ -80,12 +81,12 @@ def record_dumping_event(
     event = DumpingEventModel(
         id=new_id,
         timestamp=datetime.utcnow(),
-        address=data.address,
+        address=sanitize_text(data.address),
         lat=data.lat,
         lng=data.lng,
-        ward=data.ward,
+        ward=sanitize_text(data.ward),
         source_type=data.sourceType,
-        source_reference=data.sourceReference,
+        source_reference=sanitize_text(data.sourceReference) if data.sourceReference else None,
         evidence_url=data.evidenceUrl,
         estimated_volume_m3=data.estimatedVolumeM3 or 0.0,
         coverage_percentage=data.coveragePercentage or 0.0,
@@ -127,7 +128,8 @@ def decide_dumping_event(
     now_iso = now.isoformat() + "Z"
     history = json.loads(event.audit_history_json or "[]")
     decision_str = decision_req.decision.lower().strip()
-    notes_or_reason = decision_req.reason or decision_req.notes
+    raw_notes = decision_req.reason or decision_req.notes
+    notes_or_reason = sanitize_text(raw_notes) if raw_notes else None
 
     if decision_str in ("rejected", "reject"):
         event.status = "rejected"

@@ -19,6 +19,7 @@ from app.services.ai_vision_service import ai_vision_service
 from app.services.consolidation_service import find_duplicate_candidates, consolidate_incidents
 from app.services.audit_service import log_audit_event
 from app.routers.auth import get_current_user, require_role
+from app.core.sanitizer import sanitize_text
 
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
 
@@ -185,17 +186,17 @@ def create_incident(
 
     new_inc = IncidentModel(
         id=new_id,
-        title=data.title,
-        description=data.description,
+        title=sanitize_text(data.title),
+        description=sanitize_text(data.description),
         category=data.category,
         severity=data.severity,
         status="submitted",
-        address=data.address,
+        address=sanitize_text(data.address),
         lat=data.lat,
         lng=data.lng,
-        ward=data.ward,
-        reporter_name=data.reporterName,
-        reporter_contact=data.reporterContact,
+        ward=sanitize_text(data.ward),
+        reporter_name=sanitize_text(data.reporterName),
+        reporter_contact=sanitize_text(data.reporterContact) if data.reporterContact else None,
         is_anonymous=data.isAnonymous,
         ai_confidence=ai_result["confidenceScore"],
         ai_detected_anomaly=ai_result["detectedAnomaly"],

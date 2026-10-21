@@ -20,6 +20,7 @@ from app.schemas import (
 )
 from app.services.audit_service import log_audit_event
 from app.routers.auth import require_role, get_current_user
+from app.core.sanitizer import sanitize_text
 
 router = APIRouter(tags=["Contractor Work Orders & Repair Validation"])
 
@@ -293,22 +294,25 @@ def citizen_confirm_repair(
     now_iso = now.isoformat() + "Z"
     timeline = json.loads(inc.timeline_json or "[]")
 
+    clean_citizen_name = sanitize_text(req.citizenName)
+    clean_notes = sanitize_text(req.notes) if req.notes else "None"
+
     if req.response == "confirmed_fixed":
         inc.status = "archived"
         title = "Citizen Sign-Off: Repair Confirmed Satisfactory"
-        desc = f"Verified by citizen reporter {req.citizenName}. Case permanently archived in municipal history. Notes: {req.notes or 'None'}"
+        desc = f"Verified by citizen reporter {clean_citizen_name}. Case permanently archived in municipal history. Notes: {clean_notes}"
         action_type = "citizen_confirmation"
     else:
         inc.status = "disputed"
         title = "Citizen Dispute: Problem Reported Unresolved"
-        desc = f"Dispute logged by {req.citizenName}. Case scheduled for priority inspection audit. Citizen notes: {req.notes or 'Work incomplete.'}"
+        desc = f"Dispute logged by {clean_citizen_name}. Case scheduled for priority inspection audit. Citizen notes: {clean_notes}"
         action_type = "citizen_dispute"
 
     timeline.append({
         "timestamp": now_iso,
         "title": title,
         "description": desc,
-        "user": req.citizenName,
+        "user": clean_citizen_name,
         "type": action_type
     })
     inc.timeline_json = json.dumps(timeline)

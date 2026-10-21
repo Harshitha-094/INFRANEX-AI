@@ -226,6 +226,11 @@ def seed_initial_data(db: Session):
         db.add_all(assets_data)
         db.commit()
 
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+from app.core.security_headers import SecurityHeadersMiddleware
+from app.core.rate_limiter import RateLimiterMiddleware
+
 # Create tables and seed immediately on startup/import
 Base.metadata.create_all(bind=engine)
 _init_db = SessionLocal()
@@ -251,13 +256,32 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS Middleware
+# 1. Anti-DoS Payload Size Verification Middleware
+@app.middleware("http")
+async def verify_payload_size_limit(request: Request, call_next):
+    content_length = request.headers.get("content-length")
+    if content_length and int(content_length) > settings.MAX_REQUEST_BODY_BYTES:
+        return JSONResponse(
+            status_code=413,
+            content={"detail": f"Payload too large. Maximum allowed size is {settings.MAX_REQUEST_BODY_BYTES // (1024*1024)} MB."}
+        )
+    return await call_next(request)
+
+# 2. HTTP Security Headers Middleware (X-Frame-Options, CSP, HSTS, Sniff Guard)
+app.add_middleware(SecurityHeadersMiddleware)
+
+# 3. Sliding Window Rate Limiter & Brute-Force Shield Middleware
+app.add_middleware(RateLimiterMiddleware, general_limit=250, auth_limit=30, window_seconds=60)
+
+# 4. Hardened Cross-Origin Resource Sharing (CORS) Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permits local development on any port
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_origin_regex=r"^https://.*\.netlify\.app$",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["X-Request-ID"]
 )
 
 # API Routers
